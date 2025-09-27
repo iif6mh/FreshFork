@@ -150,7 +150,6 @@
                 font-size: 1rem;
             }
 
-            /* Removed responsive adjustments for steps-indicator and step as they are deleted */
             /*
             .steps-indicator {
                 padding: 0 0.5rem;
@@ -213,7 +212,6 @@
             measurementId: "G-9NYYPXWTP7"
         };
 
-        // Initialize Firebase (if not already initialized by previous pages/contexts)
         let app, auth;
 
         try {
@@ -289,9 +287,9 @@
 
         // Event Listener for Cancel button
         cancelBtn.addEventListener('click', () => {
-            // In a real application, you might redirect to the login page
-            window.location.href = 'login.html'; // Changed to login.html as per your naming
+            window.location.href = 'login.html'; 
         });
     </script>
 </body>
 </html>
+
