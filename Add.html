@@ -25,7 +25,7 @@
             max-width: 900px; /* Adjusted max-width for the form content */
             margin: 20px auto; /* Centered with some vertical margin */
             padding: 1.5rem;
-            background-color: #FFFDF2; /* Creamy background for the form area */
+            background-color: #FFFDF2; 
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
@@ -119,13 +119,6 @@
             text-align: center;
         }
 
-        /* The .nutrition-inputs label CSS was removed to prevent labels from showing */
-        /* .nutrition-inputs label {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #4e774e;
-        } */
-
         .tag-group {
             margin-top: 1rem;
             margin-bottom: 1.5rem;
@@ -167,7 +160,7 @@
         }
 
         .instructions-list {
-            list-style: none; /* Remove default list style */
+            list-style: none; 
             padding: 0;
         }
 
@@ -190,7 +183,6 @@
             flex-grow: 1;
         }
 
-        /* New style for the delete button */
         .delete-step-btn {
             background-color: #D40A0A; /* Red */
             color: white;
@@ -212,7 +204,7 @@
         .add-step-btn {
             background-color: #D9E2CE; /* Light green/grey */
             color: #4e774e; /* Dark green text */
-            border: 1px dashed #6a9c6a; /* Green dashed border */
+            border: 1px dashed #6a9c6a; 
             padding: 0.8rem 1.5rem;
             border-radius: 8px;
             cursor: pointer;
@@ -260,8 +252,8 @@
 
         .cancel-btn {
             background-color: transparent;
-            color: #D40A0A; /* Red text for Cancel */
-            border: 1px solid #D40A0A; /* Red border for Cancel */
+            color: #D40A0A; 
+            border: 1px solid #D40A0A; 
         }
 
         .cancel-btn:hover {
@@ -300,7 +292,7 @@
                 font-size: 1.1rem;
             }
             .nutrition-inputs {
-                grid-template-columns: 1fr; /* Stack on small screens */
+                grid-template-columns: 1fr; 
             }
             .tag-button {
                 padding: 0.5rem 0.8rem;
@@ -507,7 +499,6 @@
     serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
- // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAOx5M2CvYKEtPbf7NCV43Pn0YHba3xDBA",
   authDomain: "freshfork-3db94.firebaseapp.com",
@@ -806,4 +797,5 @@ if (logoutLink) {
   }
 </script>
 </body>
+
 </html>
