@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshFork - Clean Eating, Easy Sharing</title>
+    <style>
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #FFFDF2; /* Consistent with other pages' background */
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #6a9c6a; /* fresh-primary-green */
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .navbar-logo {
+            color: #FFFDF2; 
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 0.25rem; /* Rectangular */
+            padding: 0.5rem;
+            text-decoration: none;
+            margin-right: 2rem; /* Adjusted margin for consistency */
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .navbar-link {
+            color: #FFFDF2; /* fresh-white */
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-link:hover {
+            color: #4e774e; /* fresh-light-green */
+        }
+
+        .navbar-link.active { /* Style for active link */
+            font-weight: bold;
+            text-decoration: solid; 
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 2.5rem;
+            padding-right: 1rem;
+            border-radius: 0.25rem; /* Rectangular */
+            background-color: #FFFDF2; /* fresh-primary-green */
+            color: #6a9c6a; 
+            border: none;
+            outline: none;
+            box-shadow: 0 0 0 2px transparent;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: #6a9c6a; /* fresh-light-green */
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 2px #6a9c6a; /* fresh-light-green */
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #6a9c6a; /* fresh-light-green */
+        }
+
+        /* Styling for the Log Out button/link */
+        .logout-button {
+            background-color: transparent; /* Transparent background */
+            color: #FFFDF2; 
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            border-radius: 0.25rem; /* Rectangular */
+            border: none; /* Removed border */
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            text-decoration: none; /* Remove underline for link */
+            display: inline-block; /* Essential for padding/sizing on anchor tags */
+            font-weight: 600; /* Match previous button style */
+        }
+
+        .logout-button:hover {
+            background-color: #4e774e; /* Red background on hover */
+            color: #FFFFFF; /* White text on hover */
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background-image: url(back.jpg);
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF; /* fresh-white */
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            line-height: 1.625;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .hero-button {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            border-radius: 0.25rem; /* Rectangular */
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.3s ease;
+            border-width: 1px;
+            cursor: pointer;
+            text-decoration: none; /* Ensure buttons don't have underlines if they become links */
+            display: inline-block;
+        }
+
+        .hero-button.discover {
+            background-color: #FFFDF2; /* fresh-white */
+            color: #6a9c6a; /* fresh-primary-green */
+            border-color: #6a9c6a; /* fresh-white */
+        }
+
+        .hero-button.discover:hover {
+            background-color: #bdffbd;
+        }
+
+        .hero-button.add {
+            background-color: #6a9c6a; /* fresh-light-green */
+            color: #FFFFFF; /* fresh-white */
+            border-color: #6a9c6a; /* fresh-light-green */
+        }
+
+        .hero-button.add:hover {
+            background-color: #5b875b; /* fresh-lighter-green-hover */
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .main-heading {
+            font-size: 2.25rem;
+            font-weight: bold;
+            text-align: center;
+            color: #4e774e; /* fresh-primary-green */
+            margin-bottom: 2.5rem;
+        }
+
+        /* FAQ Section */
+        .faq-list-container {
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .faq-item {
+            background-color: #D9E2CE; /* from user's code */
+            border-radius: 0.25rem; /* Changed to rectangular */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 1px solid #ccc; /* Added border for clear rectangle */
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #4e774e; /* fresh-primary-green */
+            background-color: #D9E2CE; /* from user's code */
+        }
+
+        .faq-answer {
+            padding: 0 1rem 1rem 1rem;
+            color: #4b5563; /* text-gray-700, keeping as-is */
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+            padding-top: 1rem; /* Added padding top when active */
+        }
+
+        .faq-question .icon {
+            transform: rotate(0deg);
+            transition: transform 0.3s ease;
+            width: 1.5rem; /* Adjusted icon size */
+            height: 1.5rem; /* Adjusted icon size */
+        }
+
+        .faq-question.active .icon {
+            transform: rotate(180deg);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #6a9c6a; /* fresh-primary-green */
+            color: #FFFDF2; /* fresh-white */
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            margin-top: 0px; /* from user's code */
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+   @media (min-width: 768px) {
+    .footer-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+        .footer-col h3 {
+            font-size: 1.5rem;
+            font-weight: bold; /* from user's code */
+            margin-bottom: 1rem;
+        }
+
+        .footer-col h4 {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col p {
+            color: #4e774e; /* fresh-light-green */
+            font-size: large; /* from user's code */
+            font-weight: 500; /* from user's code */
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col a {
+            color: #FFFDF2; /* fresh-light-green (using FFFDF2 for consistency) */
+            text-decoration: none;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .contact-input, .contact-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.25rem; /* Rectangular */
+            background-color: #FFFDF2; /* fresh-primary-green (using FFFDF2 for consistency) */
+            color: #333; /* fresh-white (using 333 for consistency) */
+            border: none;
+            outline: none;
+            box-shadow: 0 0 0 2px transparent;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .contact-input::placeholder {
+            color: #6a9c6a; /* fresh-light-green */
+        }
+
+        .contact-input:focus {
+            box-shadow: 0 0 0 2px #6a9c6a; /* fresh-light-green */
+        }
+
+        .contact-textarea {
+            margin-bottom: 0.5rem;
+            margin-top: 10px;
+            color: #6a9c6a; /* from user's code */
+        }
+
+        .send-button {
+            background-color: #5b875b; /* fresh-light-green */
+            color: #FFFFFF; /* fresh-white */
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            border-radius: 0.25rem; /* Rectangular */
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .send-button:hover {
+            background-color: #4e774e; /* fresh-lighter-green-hover */
+        }
+
+        .contact-status {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #6a9c6a; /* fresh-light-green */
+        }
+        .contact-status.text-fresh-error-red {
+            color: #D40A0A; /* fresh-error-red */
+        }
+        .contact-status.text-fresh-light-green {
+            color: #6a9c6a; /* fresh-light-green */
+        }
+
+        .footer-copyright {
+            text-align: center;
+            color: #4e774e; /* fresh-light-green */
+            margin-top: 0.5rem; /* Reduced space */
+            margin-bottom: 0.5rem; /* Reduced space */
+            font-size: 0.875rem;
+        }
+
+        .user-info-display {
+            text-align: center;
+            color: #6a9c6a; /* fresh-light-green */
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Message Box styles for general alerts (copied from liked-recipes-page, centered) */
+        .message-box {
+            position: fixed;
+            top: 50%; /* Centered vertically */
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centered horizontally and vertically */
+            background-color: #6a9c6a; 
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1001;
+            text-align: center;
+            font-family: "Inter", sans-serif;
+            display: none; /* Hidden by default */
+        }
+        .message-box.show {
+            opacity: 1;
+            display: block;
+        }
+        .message-box.error {
+          position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #6a9c6a;      /* fresh-primary-green */
+    color: #D40A0A;                 /* fresh-error-red */
+    padding: 1rem 2rem;
+    border: 2px solid #6a9c6a;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 9999;
+    font-family: "Inter", sans-serif; /* to match the page */
+    user-select: none;
+    cursor: default;
+        }
+        
+        /* Added for FAQ accordion functionality */
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <span class="navbar-logo">FreshFork</span>
+            <div class="navbar-links">
+                <a href="home-sign.html" class="navbar-link active">Home</a> 
+                <a href="SignUp.html" class="navbar-link">Explore</a>
+                <a href="SignUp.html" class="navbar-link">Liked</a>
+                <a href="SignUp.html" class="navbar-link">Profile</a>
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <a href="SignUp.html" class="logout-button" id="signup-link">SignUp</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section" >
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Clean eating, easy sharing</h1>
+            <p class="hero-description">Discover, cook, and share wholesome recipes made for a healthier you.</p>
+            <div class="hero-buttons">
+                <a href="SignUp.html" class="hero-button discover">Discover Recipe</a>
+                <button type="button" class="hero-button add" onclick="showAlertForAddRecipe()">Add Recipe</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 class="main-heading"><span style="color: #333;">Frequently Asked </span><span style="color: #6a9c6a;">Questions</span></h2>
+
+        <div id="faq-list" class="faq-list-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is FreshFork?</span>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <p>FreshFork is a community-driven app for discovering, sharing, and saving healthy recipes tailored to your lifestyle—whether you're vegan, low-carb, or just eating clean.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What kinds of recipes can I find on FreshFork?</span>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <p>You'll find a wide variety of wholesome recipes—from plant-based meals and high-protein snacks to gluten-free desserts and seasonal dishes.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I upload my own recipes?</span>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <p>Absolutely! FreshFork lets you share your own healthy creations with easy steps, including ingredients, instructions, and photos.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is there support for dietary restrictions?</span>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes, you can filter and tag recipes based on preferences like vegan, keto, dairy-free, and more.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Do I need an account to use the app?</span>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="faq-answer">
+                    <p>You can browse as a guest, but to save, share, or upload recipes, you'll need to create a free account.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+   <footer class="footer">
+    <div class="container footer-grid">
+        <div class="footer-col">
+            <h3 style="font-weight: 500;">FreshFork</h3>
+            <p style="font-size: large; font-weight: 500;">Clean eating, easy <br>sharing</p>
+        </div>
+        <div class="footer-col">
+            <h4>Social Media</h4>
+            <ul>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">TikTok</a></li>
+                <li><a href="#">YouTube</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Contact Us</h4>
+            <div class="contact-form-group">
+                <input type="email" id="contact-email" placeholder="Your Email" class="contact-input">
+                <span id="contact-email-error" class="contact-error-message"></span>
+                <textarea id="contact-message" placeholder="Your Message" rows="4" class="contact-textarea"></textarea>
+                <span id="contact-message-error" class="contact-error-message"></span>
+                <button id="send-contact-btn" class="send-button">Send</button>
+                <div id="contact-status" class="contact-status"></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p style="font-size:medium; color: #f0f0f0;">&copy; 2025 FreshFork. All rights reserved.</p>
+    </div>
+    <div class="user-info-display" id="user-info"></div>
+</footer>
+        
+
+    <div id="message-box" class="message-box">
+    <p id="message-box-text"></p>
+</div>
+
+    <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, collection, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        // Global variables for Firebase config provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOx5M2CvYKEtPbf7NCV43Pn0YHba3xDBA",
+            authDomain: "freshfork-3db94.firebaseapp.com",
+            projectId: "freshfork-3db94",
+            storageBucket: "freshfork-3db94.firebasestorage.app",
+            messagingSenderId: "519870760639",
+            appId: "1:519870760639:web:8267f8fc8e3c220527680a",
+            measurementId: "G-9NYYPXWTP7"
+        };
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null; 
+
+    let app, auth, db;
+    let currentUserId = null;
+
+    try {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+        console.log("Firebase initialized.");
+    } catch (error) {
+        console.error("Failed to initialize Firebase:", error);
+    }
+
+   function showMessageBox(message, isError = false) { 
+    const messageBox = document.getElementById('message-box');
+    const messageBoxText = document.getElementById('message-box-text');
+
+    messageBoxText.textContent = message;
+    
+    if (isError) {
+        messageBox.classList.add('error');
+        // No button to show/hide now
+    } else {
+        messageBox.classList.remove('error');
+        setTimeout(() => {
+            messageBox.classList.remove('show'); 
+        }, 3000); 
+    }
+    messageBox.classList.add('show');
+}
+
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUserId = user.uid;
+            console.log("User authenticated:", currentUserId);
+            document.getElementById('user-info').textContent = `User ID: ${currentUserId}`;
+        } else {
+            if (initialAuthToken) {
+                try {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                    console.log("Signed in with custom token.");
+                } catch (error) {
+                    console.error("Error signing in with custom token:", error);
+                    try {
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously after custom token failure.");
+                    } catch (anonError) {
+                        console.error("Error signing in anonymously:", anonError);
+                    }
+                }
+            } else {
+                try {
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously.");
+                }  catch (anonError) {
+                    console.error("Error signing in anonymously:", anonError);
+                }
+            }
+        }
+    });
+
+        // --- Contact Form Submission ---
+        const contactEmailInput = document.getElementById('contact-email');
+        const contactMessageInput = document.getElementById('contact-message');
+        const sendContactBtn = document.getElementById('send-contact-btn');
+        const contactStatusDiv = document.getElementById('contact-status');
+
+        sendContactBtn.addEventListener('click', async () => {
+            contactStatusDiv.textContent = '';
+            contactStatusDiv.classList.remove('text-fresh-error-red', 'text-fresh-light-green');
+
+            const email = contactEmailInput.value.trim();
+            const message = contactMessageInput.value.trim();
+
+            if (!currentUserId) {
+                contactStatusDiv.textContent = 'User not authenticated. Please wait or try refreshing.';
+                contactStatusDiv.classList.add('text-fresh-error-red');
+                return;
+            }
+
+            if (email === '' || message === '') {
+                contactStatusDiv.textContent = 'Please fill in both email and message fields.';
+                contactStatusDiv.classList.add('text-fresh-error-red');
+                return;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                contactStatusDiv.textContent = 'Please enter a valid email address.';
+                contactStatusDiv.classList.add('text-fresh-error-red');
+                return;
+            }
+
+            try {
+                const contactMessagesRef = collection(db, "contact_messages");
+await addDoc(contactMessagesRef, {
+    email,
+    message,
+    timestamp: serverTimestamp(),
+    userId: currentUserId
+});
+
+                contactStatusDiv.textContent = 'Message sent successfully!';
+                contactStatusDiv.classList.add('text-fresh-light-green');
+                contactEmailInput.value = '';
+                contactMessageInput.value = '';
+                setTimeout(() => { // Hide success message after a few seconds
+                    contactStatusDiv.textContent = '';
+                    contactStatusDiv.classList.remove('text-fresh-light-green');
+                }, 3000);
+            } catch (error) {
+                console.error("Error sending contact message:", error);
+                contactStatusDiv.textContent = 'Failed to send message. Please try again.';
+                contactStatusDiv.classList.add('text-fresh-error-red');
+            }
+        });
+
+        // Event listener for the "SignUp" button in the navbar (renamed from logout-link for clarity)
+        document.getElementById('signup-link').addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default link behavior
+            window.location.href = 'SignUp.html'; // Redirect to SignUp page
+        });
+
+async function showAlertForAddRecipe() {
+        if (!currentUserId) {
+            showMessageBox("Please sign in to add a recipe.", true);
+            return;
+        }
+
+        try {
+            const userDocRef = doc(db, "Users", currentUserId);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (userSnapshot.exists()) {
+                const userData = userSnapshot.data();
+                if (userData.isChef === true) {
+                    window.location.href = "Add.html";
+                } else {
+                    showMessageBox("You need to sign up as a chef first.", true);
+                }
+            } else {
+                showMessageBox("User profile not found. Please sign up.", true);
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            showMessageBox("Something went wrong. Please try again.", true);
+        }
+    }
+    window.showAlertForAddRecipe = showAlertForAddRecipe;
+
+    // Discover button
+    document.querySelector('.hero-button.discover').addEventListener('click', () => {
+        window.location.href = 'SignUp.html';
+    });
+    </script>
+
+    <script>
+      
+        document.addEventListener('DOMContentLoaded', function() {
+    // Existing FAQ accordion toggle code
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+            const answer = this.nextElementSibling;
+            const icon = this.querySelector('.icon');
+            
+            // Close all other answers
+            document.querySelectorAll('.faq-answer').forEach(ans => {
+                if (ans !== answer) {
+                    ans.classList.remove('active');
+                    ans.previousElementSibling.classList.remove('active');
+                    ans.previousElementSibling.querySelector('.icon').classList.remove('rotate-180');
+                }
+            });
+            
+            // Toggle current answer
+            answer.classList.toggle('active');
+            this.classList.toggle('active');
+            icon.classList.toggle('rotate-180');
+        });
+    });
+
+    //  FAQ search filtering
+    const searchInput = document.querySelector('.search-input');
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+
+        faqItems.forEach(item => {
+            const questionText = item.querySelector('.faq-question span').textContent.toLowerCase();
+            const answerText = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+            if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                item.style.display = ''; // show item
+            } else {
+                item.style.display = 'none'; // hide item
+            }
+        });
+    });
+});
+
+    </script>
+</body>
+</html>

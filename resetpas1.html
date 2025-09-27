@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshFork - Forget Password</title>
+    <style>
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f7f7f7; /* fresh-light-grey */
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: #FFFDF2; /* fresh-cream-bg */
+            padding: 2.5rem; /* ~40px */
+            border-radius: 0.5rem; /* Rounded corners for the main container */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px; /* Limit width on larger screens */
+            text-align: center;
+        }
+
+        .header {
+            text-align: left;
+            margin-bottom: 2rem; /* mb-8 */
+        }
+
+        .header h2 {
+            font-size: 2.25rem; /* text-3xl */
+            font-weight: bold;
+            color: #4e774e; /* fresh-primary-green */
+            margin-bottom: 1rem;
+        }
+        .instruction-text {
+            font-size: 1.125rem; /* text-lg */
+            color: #4b5563; /* text-gray-700 */
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Form Group */
+        .form-group {
+            text-align: left;
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem; /* text-sm */
+            color: #4e774e; /* fresh-primary-green */
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem; /* p-3 */
+            border: 1px solid #ccc; /* fresh-border-grey */
+            border-radius: 0.25rem; /* Rectangular */
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #6a9c6a; /* fresh-light-green */
+            box-shadow: 0 0 0 2px rgba(106, 156, 106, 0.2);
+        }
+
+        .required-star {
+            color: #D40A0A; /* fresh-error-red */
+            margin-left: 0.25rem;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* space-y-4 */
+            margin-top: 2rem; /* mt-8 */
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.25rem; /* Rectangular */
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #6a9c6a; /* fresh-light-green */
+            color: #FFFFFF; /* fresh-white */
+        }
+
+        .btn-primary:hover {
+            background-color: #5b875b; /* fresh-lighter-green-hover */
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #D40A0A; /* fresh-error-red */
+            border: 1px solid #D40A0A; /* fresh-error-red */
+        }
+
+        .btn-secondary:hover {
+            background-color: #ffebeb; /* Light red hover */
+        }
+
+        /* Message Display */
+        #message-display {
+            margin-top: 1.5rem; /* mt-6 */
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        #message-display.success {
+            color: #4e774e; /* fresh-primary-green */
+        }
+
+        #message-display.error {
+            color: #D40A0A; /* fresh-error-red */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .header h2 {
+                font-size: 1.75rem;
+            }
+
+            .instruction-text {
+                font-size: 1rem;
+            }
+
+            /* Removed responsive adjustments for steps-indicator and step as they are deleted */
+            /*
+            .steps-indicator {
+                padding: 0 0.5rem;
+            }
+
+            .step {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Forget password</h2>
+        </div>
+
+        <!-- Removed Steps Indicator HTML -->
+        <!--
+        <div class="steps-indicator">
+            <div class="step active">1</div>
+            <div class="step">2</div>
+            <div class="step">3</div>
+        </div>
+        -->
+
+        <p class="instruction-text">
+            Enter your email and we'll send you a reset link
+        </p>
+
+        <div class="form-group">
+            <label for="email">Enter your Email Here <span class="required-star">*</span></label>
+            <input type="email" id="email" placeholder="user@example.com">
+            <div id="email-error" class="message-text error-message" style="color: #D40A0A; font-size: 0.875rem; margin-top: 0.5rem; text-align: left;"></div>
+        </div>
+
+        <div class="button-group">
+            <button id="send-reset-btn" class="btn btn-primary">Send Reset Link</button>
+            <button id="cancel-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+
+        <div id="message-display"></div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOx5M2CvYKEtPbf7NCV43Pn0YHba3xDBA",
+            authDomain: "freshfork-3db94.firebaseapp.com",
+            projectId: "freshfork-3db94",
+            storageBucket: "freshfork-3db94.firebasestorage.app",
+            messagingSenderId: "519870760639",
+            appId: "1:519870760639:web:8267f8fc8e3c220527680a",
+            measurementId: "G-9NYYPXWTP7"
+        };
+
+        // Initialize Firebase (if not already initialized by previous pages/contexts)
+        let app, auth;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            console.log("Firebase initialized for password reset.");
+        } catch (error) {
+            console.error("Failed to initialize Firebase:", error);
+            document.getElementById('message-display').textContent = 'Error initializing application services.';
+            document.getElementById('message-display').classList.add('error');
+        }
+
+        // Get DOM elements
+        const emailInput = document.getElementById('email');
+        const emailErrorDiv = document.getElementById('email-error');
+        const sendResetBtn = document.getElementById('send-reset-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const messageDisplay = document.getElementById('message-display');
+
+        // Function to clear messages
+        function clearMessages() {
+            emailErrorDiv.textContent = '';
+            messageDisplay.textContent = '';
+            messageDisplay.classList.remove('success', 'error');
+        }
+
+        // Event Listener for Send Reset Link button
+        sendResetBtn.addEventListener('click', async () => {
+            clearMessages(); // Clear previous messages
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                emailErrorDiv.textContent = 'Email is required.';
+                return;
+            }
+            if (!email.includes('@') || !email.includes('.')) {
+                emailErrorDiv.textContent = 'Please enter a valid email address.';
+                return;
+            }
+
+            if (!auth) {
+                messageDisplay.textContent = 'Authentication service not available. Please try again later.';
+                messageDisplay.classList.add('error');
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                messageDisplay.textContent = 'A password reset link has been sent to your email address.';
+                messageDisplay.classList.add('success');
+                emailInput.value = ''; // Clear email field on success
+            } catch (error) {
+                console.error("Error sending password reset email:", error);
+                let errorMessage = 'Failed to send reset link. Please try again.';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'No user found with that email address.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'The email address is not valid.';
+                        break;
+                    case 'auth/missing-email':
+                        errorMessage = 'Email address is required.';
+                        break;
+                    default:
+                        errorMessage = `Error: ${error.message}`;
+                        break;
+                }
+                messageDisplay.textContent = errorMessage;
+                messageDisplay.classList.add('error');
+            }
+        });
+
+        // Event Listener for Cancel button
+        cancelBtn.addEventListener('click', () => {
+            // In a real application, you might redirect to the login page
+            window.location.href = 'login.html'; // Changed to login.html as per your naming
+        });
+    </script>
+</body>
+</html>

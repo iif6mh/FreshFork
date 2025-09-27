@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">FreshFork - Recipe Details</title>
+    <style>
+        /* Base Styles - Adjusted to match image */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #F7F7F7; /* Light grey background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for scrollable content */
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #4e774e; /* Changed default text color to green */
+        }
+
+        .recipe-detail-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            background-color: #FFFDF2; /* Changed to FFFDF2 */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 900px; /* Max width similar to the screenshot */
+            width: 100%; /* Full width within max-width */
+            overflow: hidden; /* Ensures rounded corners apply to children */
+        }
+
+        /* Left Section: Image and Recipe Info */
+        .recipe-left-section {
+            flex: 1; /* Takes available space */
+            min-width: 300px; /* Minimum width before wrapping */
+            background-color: #6a9c6a; /* Green background */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to top */
+        }
+
+        .recipe-image-container {
+            width: 100%;
+            padding-bottom: 20px; /* Space below image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .recipe-image {
+            width: 100%;
+            max-width: 400px; /* Max width for the image */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 8px; /* Rounded corners for the image */
+            object-fit: cover;
+        }
+
+        .recipe-title {
+            color: #1a6e1a; /* Off-white text */
+            font-size: 2.2em; /* Bigger title */
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+            word-wrap: break-word; /* Prevent long words from overflowing */
+        }
+
+        .recipe-author {
+            color: #dadada; /* Off-white text for author */
+            font-size: 0.9em;
+            margin-top: 5px; /* Small space below title */
+            text-align: center;
+        }
+
+        .recipe-description {
+            color: #FFFDF2; /* Off-white text */
+            font-size: 1.0em;
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+
+        .nutrition-info {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 25px;
+            padding: 0 20px;
+        }
+
+        .nutrition-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #1a6e1a; /* Changed to green for values */
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .nutrition-item span {
+            color: #1a6e1a; /* Off-white for labels like 'Calories' */
+            font-size: 0.8em;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+
+        /* Right Section: Instructions */
+        .recipe-right-section {
+            flex: 1; /* Takes available space */
+            min-width: 300px; /* Minimum width before wrapping */
+            background-color: #FFFDF2; /* Changed to FFFDF2 */
+            padding: 20px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .instructions-heading {
+            color: #6a9c6a; /* Green heading */
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .instructions-list {
+            list-style: decimal; /* Numbered list */
+            padding-left: 25px; /* Indent for numbers */
+            font-size: 1.0em;
+            line-height: 1.8;
+            color: #4e774e; /* Changed to green for instruction text */
+        }
+        .instructions-list li {
+            margin-bottom: 10px;
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .recipe-detail-container {
+                flex-direction: column; /* Stack sections vertically */
+            }
+
+            .recipe-left-section,
+            .recipe-right-section {
+                padding: 15px;
+                min-width: unset; /* Remove min-width on small screens */
+            }
+
+            .recipe-title {
+                font-size: 1.8em;
+            }
+            .nutrition-info {
+                flex-wrap: wrap; /* Wrap nutrition items if too many */
+                justify-content: center;
+                gap: 15px; /* Add gap for wrapped items */
+            }
+
+            .instructions-heading {
+                font-size: 1.4em;
+            }
+
+            .instructions-list {
+                padding-left: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .recipe-title {
+                font-size: 1.5em;
+            }
+            .recipe-description {
+                font-size: 0.9em;
+            }
+            .instructions-heading {
+                font-size: 1.2em;
+            }
+            .instructions-list {
+                font-size: 0.9em;
+            }
+        }
+
+        /* Loading and Error Styles */
+        #loading-message, #error-message {
+            text-align: center;
+            font-size: 1.2em;
+            color: #6a9c6a;
+            padding: 50px;
+            width: 100%;
+            display: none; /* Hidden by default */
+        }
+        #error-message {
+            color: #D40A0A; /* Red for errors */
+        }
+        .review-section {
+    margin-top: 30px;
+    border-top: 2px solid #5c755c;
+    padding-top: 20px;
+}
+#review-list {
+    margin-bottom: 20px;
+}
+
+.review-item {
+    background-color: #f1f9f1;
+    padding: 10px 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: #4e774e;
+}
+
+#review-input {
+    width: 80px;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #6a9c6a;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    resize: none;
+}
+
+#submit-review-btn {
+    background-color: #6a9c6a;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin-left:360px;
+    border-radius: 8px;
+    align-items: center;
+    cursor: pointer;
+}
+
+#submit-review-btn:hover {
+    background-color: #558a55;
+}
+
+    </style>
+</head>
+<body>
+    <div class="recipe-detail-container" id="recipe-detail-container">
+        <div id="loading-message">Loading recipe details...</div>
+        <div id="error-message"></div>
+    </div>
+   <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { 
+  getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, query, orderBy, getDocs, deleteDoc, updateDoc 
+} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+// Firebase config
+const firebaseConfig = {
+    apiKey: "AIzaSyAOx5M2CvYKEtPbf7NCV43Pn0YHba3xDBA",
+    authDomain: "freshfork-3db94.firebaseapp.com",
+    projectId: "freshfork-3db94",
+    storageBucket: "freshfork-3db94.appspot.com", // fixed typo
+    messagingSenderId: "519870760639",
+    appId: "1:519870760639:web:8267f8fc8e3c220527680a",
+    measurementId: "G-9NYYPXWTP7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const recipeDetailContainer = document.getElementById('recipe-detail-container');
+const loadingMessage = document.getElementById('loading-message');
+const errorMessage = document.getElementById('error-message');
+const pageTitle = document.getElementById('page-title');
+
+let currentUser = null;
+
+onAuthStateChanged(auth, (user) => {
+    currentUser = user || null;
+    loadRecipeDetails();
+});
+
+async function loadReviews(recipeId) {
+    const reviewsList = document.getElementById('reviews-list');
+    reviewsList.innerHTML = '<p>Loading reviews...</p>';
+
+    try {
+        const reviewRef = doc(db, "Recipes", recipeId);
+        const reviewsCollection = collection(reviewRef, "Reviews");
+        const q = query(reviewsCollection, orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            reviewsList.innerHTML = '<p>No reviews yet. Be the first to write one!</p>';
+            return;
+        }
+
+        reviewsList.innerHTML = '';
+        querySnapshot.forEach(docSnap => {
+            const review = docSnap.data();
+            const reviewId = docSnap.id;
+
+            const reviewDiv = document.createElement('div');
+            reviewDiv.classList.add('review-item');
+
+            reviewDiv.innerHTML = `
+                <strong>${review.name || 'Anonymous'}</strong><br>
+                <span>${review.reviewText || ''}</span>
+            `;
+
+       if (currentUser && review.userId === currentUser.uid) {
+    // Edit button
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.style.marginLeft = '795px';
+    editBtn.style.backgroundColor = '#4e774e';
+    editBtn.style.color = 'white';
+    editBtn.style.border = 'none';
+    editBtn.style.borderRadius = '4px';
+    editBtn.style.padding = '2px 8px';
+    editBtn.style.cursor = 'pointer';
+    editBtn.style.marginBottom = '10px';
+    editBtn.addEventListener('click', () => {
+        const span = reviewDiv.querySelector('span');
+        const currentText = span.textContent;
+        const textarea = document.createElement('textarea');
+        textarea.value = currentText;
+        textarea.rows = 3;
+        textarea.style.width = '95%';
+        textarea.style.marginTop = '5px';
+
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = 'Save';
+        saveBtn.style.backgroundColor = '#6a9c6a';
+        saveBtn.style.color = 'white';
+        saveBtn.style.border = 'none';
+        saveBtn.style.borderRadius = '4px';
+        saveBtn.style.padding = '2px 8px';
+        saveBtn.style.marginTop = '5px';
+        saveBtn.style.cursor = 'pointer';
+
+        // Replace span with textarea
+        reviewDiv.replaceChild(textarea, span);
+        reviewDiv.appendChild(saveBtn);
+
+        saveBtn.addEventListener('click', async () => {
+            const updatedText = textarea.value.trim();
+            if (!updatedText) {
+                alert("Review text cannot be empty.");
+                return;
+            }
+            try {
+                const reviewDocRef = doc(db, "Recipes", recipeId, "Reviews", reviewId);
+                await updateDoc(reviewDocRef, {
+                    reviewText: updatedText
+                });
+                loadReviews(recipeId); // refresh reviews
+            } catch (err) {
+                console.error("Error updating review:", err);
+                alert("Failed to update review.");
+            }
+        });
+    });
+    reviewDiv.appendChild(editBtn);
+
+    // Delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.style.marginLeft = '790px';
+    deleteBtn.style.backgroundColor = '#d40a0a';
+    deleteBtn.style.color = 'white';
+    deleteBtn.style.border = 'none';
+    deleteBtn.style.borderRadius = '4px';
+    deleteBtn.style.padding = '2px 8px';
+    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.addEventListener('click', () => {
+        if (confirm("Delete this review?")) {
+            deleteReview(recipeId, reviewId);
+        }
+    });
+    reviewDiv.appendChild(deleteBtn);
+}
+
+            reviewsList.appendChild(reviewDiv);
+        });
+
+    } catch (error) {
+        console.error("Error loading reviews:", error);
+        reviewsList.innerHTML = '<p style="color:#D40A0A;">Failed to load reviews.</p>';
+    }
+}
+
+async function deleteReview(recipeId, reviewId) {
+    try {
+        const reviewDocRef = doc(db, "Recipes", recipeId, "Reviews", reviewId);
+        await deleteDoc(reviewDocRef);
+        loadReviews(recipeId); // refresh
+    } catch (error) {
+        console.error("Error deleting review:", error);
+        alert("Failed to delete review.");
+    }
+}
+
+function setupReviewSection(recipeId) {
+    const reviewSection = document.createElement('div');
+    reviewSection.style.width = '100%';
+    reviewSection.style.backgroundColor = '#fffdf2';
+    reviewSection.style.padding = '20px';
+    reviewSection.style.borderTop = '2px solid #6a9c6a';
+    reviewSection.style.marginTop = '20px';
+    reviewSection.style.color = '#5c755c';
+
+    reviewSection.innerHTML = `
+        <h2 style="color:#6a9c6a;">Reviews</h2>
+        <div id="reviews-list" style="margin-bottom:20px; color:#4e774e;"></div>
+
+        <textarea id="review-input" rows="4" placeholder="Write your review here..." 
+            style="width:98%; padding:10px; border:1px solid #ccc; border-radius:8px; resize: vertical;"></textarea>
+        
+        <div id="review-error" style="color:#D40A0A; margin:5px 0; display:none; text-align: center">
+            Please write a review before submitting.
+        </div>
+
+        <button id="submit-review-btn" 
+            style="background-color:#6a9c6a; color:white; padding:8px 16px; border:none; border-radius:6px; cursor:pointer; margin-top:10px;">
+            Submit Review
+        </button>
+    `;
+
+    recipeDetailContainer.appendChild(reviewSection);
+    const submitBtn = document.getElementById('submit-review-btn');
+    const reviewInput = document.getElementById('review-input');
+    const errorDiv = document.getElementById('review-error');
+    const reviewsList = document.getElementById('reviews-list');
+    loadReviews(recipeId);
+    submitBtn.addEventListener('click', async () => {
+        const reviewText = reviewInput.value.trim();
+        if (reviewText === '') {
+            errorDiv.style.display = 'block';
+            return;
+        }
+        if (!currentUser) {
+            alert('You must be logged in to submit a review.');
+            return;
+        }
+        errorDiv.style.display = 'none';
+        try {
+            const reviewRef = doc(db, "Recipes", recipeId);
+            const reviewsCollection = collection(reviewRef, "Reviews");
+            await addDoc(reviewsCollection, {
+                reviewText: reviewText,
+                createdAt: serverTimestamp(),
+                userId: currentUser.uid,
+                name: currentUser.displayName || "Anonymous"
+            });
+            reviewInput.value = '';
+            loadReviews(recipeId);
+        } catch (error) {
+            console.error("Error adding review:", error);
+        }
+    });
+}
+async function loadRecipeDetails() {
+    loadingMessage.style.display = 'block';
+    errorMessage.style.display = 'none';
+    const urlParams = new URLSearchParams(window.location.search);
+    const recipeId = urlParams.get('id');
+
+    if (!recipeId) {
+        loadingMessage.style.display = 'none';
+        errorMessage.textContent = "Error: No recipe ID provided in the URL.";
+        errorMessage.style.display = 'block';
+        return;
+    }
+    try {
+        const recipeDocRef = doc(db, 'Recipes', recipeId);
+        const recipeDocSnap = await getDoc(recipeDocRef);
+
+        if (recipeDocSnap.exists()) {
+            const recipeData = recipeDocSnap.data();
+            pageTitle.textContent = `FreshFork - ${recipeData.title}`;
+            recipeDetailContainer.innerHTML = `
+                <div class="recipe-left-section">
+                    <div class="recipe-image-container">
+                        <img src="${recipeData.imageData || 'https://placehold.co/400x300/6a9c6a/FFFDF2?text=Image+Not+Found'}" 
+                            alt="${recipeData.title}" 
+                            class="recipe-image">
+                    </div>
+                    <h1 class="recipe-title">${recipeData.title || 'Untitled Recipe'}</h1>
+                    <p class="recipe-author">by ${recipeData.chefName || 'Unknown Chef'}</p>
+                    <p class="recipe-description">${recipeData.description || 'No description available.'}</p>
+                    <div class="nutrition-info">
+                        <div class="nutrition-item">${recipeData.nutrition?.calories || 'N/A'}<span>Calories</span></div>
+                        <div class="nutrition-item">${recipeData.nutrition?.carbs || 'N/A'}<span>Carbs</span></div>
+                        <div class="nutrition-item">${recipeData.nutrition?.protein || 'N/A'}<span>Protein</span></div>
+                        <div class="nutrition-item">${recipeData.nutrition?.fat || 'N/A'}<span>Fat</span></div>
+                    </div>
+                </div>
+                <div class="recipe-right-section">
+                    <h2 class="instructions-heading">Step-by-step instructions:</h2>
+                    <ol class="instructions-list" id="instructions-list"></ol>
+                </div>
+            `;
+            const instructionsList = document.getElementById('instructions-list');
+            if (Array.isArray(recipeData.instructions)) {
+                recipeData.instructions.forEach(step => {
+                    const li = document.createElement('li');
+                    li.textContent = step;
+                    instructionsList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'No instructions available.';
+                instructionsList.appendChild(li);
+            }
+
+            setupReviewSection(recipeId);
+        } else {
+            errorMessage.textContent = "Recipe not found.";
+            errorMessage.style.display = 'block';
+            recipeDetailContainer.innerHTML = '';
+        }
+    } catch (err) {
+        console.error(err);
+        errorMessage.textContent = `Failed to load recipe: ${err.message}`;
+        errorMessage.style.display = 'block';
+        recipeDetailContainer.innerHTML = '';
+    } finally {
+        loadingMessage.style.display = 'none';
+    }
+}
+</script>
+</body>
+</html>

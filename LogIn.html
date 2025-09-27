@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Log In</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: #f7f7f7;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-panel {
+            width: 50%;
+            background-image: url(back.jpg);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #FFFDF2;
+            text-align: center;
+            padding: 50px;
+            position: relative; /* Needed for overlay */
+        }
+
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay restored */
+            z-index: 0;
+        }
+
+        .left-panel .content {
+            position: relative;
+            z-index: 1; /* Ensure content is above overlay */
+        }
+
+        .left-panel h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: white; /* Ensure text is visible over overlay */
+        }
+
+        .left-panel p {
+            font-size: 16px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            color: white; /* Ensure text is visible over overlay */
+        }
+
+        .signup-btn {
+            background-color: #6a9c6a; /* A shade of green */
+            color: white;
+            padding: 12px 255px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            /* Added for anchor tag to behave like a button */
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .signup-btn:hover {
+            background-color: #5b875b;
+        }
+
+        .right-panel {
+            width: 50%;
+            background-color: #FFFDF2; /* Light creamy background */
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start; /* Align content to the left */
+        }
+
+        .right-panel h2 {
+            color: #4e774e; /* Dark green for headings */
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%; /* Center the heading */
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 10px;
+            width: 100%;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .google-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .google-btn img {
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .or {
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+            width: 100%;
+            position: relative;
+        }
+
+        .or::before, .or::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #ccc;
+        }
+
+        .or::before {
+            left: 0;
+        }
+
+        .or::after {
+            right: 0;
+        }
+
+        input {
+            margin: 10px 0 5px 0; /* Adjusted margin to make space for error message */
+            padding: 12px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #4e774e;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .required {
+            color: #D40A0A;
+            margin-left: 4px;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+        }
+
+        .error-message {
+            color: #D40A0A; /* Red color for error messages */
+            font-size: 12px;
+            margin-top: 5px;
+            display: block; /* Ensure it takes its own line */
+        }
+
+        .success-message {
+            color: #4e774e; /* Green color for success messages */
+            font-size: 14px;
+            margin-top: 15px;
+            text-align: center;
+            display: block;
+        }
+
+        .forgot-password {
+            font-size: 14px;
+            color: #4e774e;
+            text-decoration: none;
+            text-align: right;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            margin-top: 20px;
+            background: #6a9c6a; /* A shade of green */
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #5b875b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="content">
+                <h2>Hello !</h2>
+                <p>Fuel your body, Inspire others,<br>Start cooking better.</p>
+                <a href="signup.html" class="signup-btn">Sign Up</a>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2>Login To Your Account</h2>
+            <button class="google-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png" alt="Google" />
+                Login With Google
+            </button>
+            <div class="or">or</div>
+
+            <div class="form-group">
+                <label for="email">Email <span class="required">*</span></label>
+                <input type="email" id="email" placeholder="User@gmail.com" />
+                <span class="error-message" id="email-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password <span class="required">*</span></label>
+                <input type="password" id="password" placeholder="********" />
+                <span class="error-message" id="password-error"></span>
+                <a href="resetpas1.html" class="forgot-password">Forgot Password?</a>
+            </div>
+
+            <button class="login-btn" id="login-button">Login</button>
+            <span class="error-message" id="firebase-error-message" style="text-align: center; margin-top: 10px;"></span>
+            <span class="success-message" id="login-success-message" style="text-align: center; margin-top: 10px;"></span>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+
+        // Global variables for Firebase config provided by the environment
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOx5M2CvYKEtPbf7NCV43Pn0YHba3xDBA",
+            authDomain: "freshfork-3db94.firebaseapp.com",
+            projectId: "freshfork-3db94",
+            storageBucket: "freshfork-3db94.firebasestorage.app",
+            messagingSenderId: "519870760639",
+            appId: "1:519870760639:web:8267f8fc8e3c220527680a",
+            measurementId: "G-9NYYPXWTP7"
+        };
+
+        // Initialize Firebase
+        let app, auth, db;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase initialized for login.");
+        } catch (error) {
+            console.error("Failed to initialize Firebase:", error);
+            document.getElementById('firebase-error-message').textContent = 'Error initializing Firebase. Please ensure your Firebase project configuration is correct.';
+        }
+        const googleButton = document.querySelector('.google-btn');
+        googleButton.addEventListener('click', async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        console.log('Google Sign-In successful:', user);
+
+        // Optional: Save user data to Firestore (if new user)
+        const userDoc = doc(db, "Users", user.uid);
+        await setDoc(userDoc, {
+            username: user.displayName || '',
+            email: user.email,
+            isChef: false, // Default position for Google sign-in
+            createdAt: serverTimestamp()
+        }, { merge: true });
+
+        // Redirect to home page
+        window.location.href = 'home-sign.html';
+
+    } catch (error) {
+        console.error('Error during Google Sign-In:', error);
+        firebaseErrorMessage.textContent = error.message;
+    }
+});
+
+
+        // Get references to DOM elements
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('email-error');
+        const passwordError = document.getElementById('password-error');
+        const loginBtn = document.getElementById('login-button'); // This is the submit button
+        const loginSuccessMessage = document.getElementById('login-success-message');
+        const firebaseErrorMessage = document.getElementById('firebase-error-message');
+
+        // Function to clear all messages
+        function clearMessages() {
+            emailError.textContent = '';
+            passwordError.textContent = '';
+            loginSuccessMessage.textContent = '';
+            firebaseErrorMessage.textContent = '';
+        }
+
+        loginBtn.addEventListener('click', async () => {
+            clearMessages(); // Clear previous messages on new attempt
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            let hasError = false;
+
+            // Client-side Email validation
+            if (email === '') {
+                emailError.textContent = 'Email is required.';
+                hasError = true;
+            } else if (!email.includes('@') || !email.includes('.')) {
+                emailError.textContent = 'Please enter a valid email address.';
+                hasError = true;
+            }
+
+            // Client-side Password validation
+            if (password === '') {
+                passwordError.textContent = 'Password is required.';
+                hasError = true;
+            } else if (password.length < 6) { // Firebase requires at least 6 characters for password
+                passwordError.textContent = 'Password must be at least 6 characters long.';
+                hasError = true;
+            }
+
+            if (hasError) {
+                return; // Stop the function if there are client-side validation errors
+            }
+
+            if (!auth) {
+                firebaseErrorMessage.textContent = 'Authentication service not available. Please ensure Firebase is initialized correctly.';
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                console.log("User logged in:", user.uid);
+
+                const userDocRef = doc(db, "Users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (!userDocSnap.exists()) {
+                    await setDoc(userDocRef, {
+                        email: user.email,
+                        createdAt: serverTimestamp()
+                    });
+                    console.log("User document created.");
+                } else {
+                    console.log("User document already exists.");
+                }
+
+                loginSuccessMessage.textContent = "Login successful! Redirecting...";
+                setTimeout(() => {
+                    window.location.href = 'home-sign.html'; // Redirect to home-sign.html
+                }, 1500);
+
+
+            } catch (error) {
+                console.error("Error during login:", error);
+                let displayMessage = "An unexpected error occurred during login. Please try again.";
+
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        displayMessage = 'The email address is not valid.';
+                        break;
+                    case 'auth/user-disabled':
+                        displayMessage = 'This account has been disabled.';
+                        break;
+                    case 'auth/invalid-credential':
+                    case 'auth/wrong-password':
+                    case 'auth/user-not-found':
+                        displayMessage = 'Invalid email or password.';
+                        break;
+                    default:
+                        displayMessage = error.message || "An error occurred during login. Please try again.";
+                        break;
+                }
+                firebaseErrorMessage.textContent = displayMessage;
+            }
+        });
+    </script>
+</body>
+</html>

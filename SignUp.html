@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Create Account</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: #f7f7f7;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-panel {
+            width: 50%;
+            background-color: #FFFDF2;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .left-panel h2 {
+            color: #4e774e;
+            margin-bottom: 20px;
+            text-align: center; /* Center "Create Account" heading */
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 10px;
+            width: 100%;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            border-radius: 4px; /* Added for consistency */
+            transition: background-color 0.3s ease; /* Added for hover effect */
+        }
+
+        .google-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .google-btn img {
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        .or {
+            text-align: center;
+            margin: 10px 0;
+            color: #666;
+            position: relative; /* For horizontal lines */
+        }
+
+        .or::before, .or::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #ccc;
+        }
+
+        .or::before {
+            left: 0;
+        }
+
+        .or::after {
+            right: 0;
+        }
+
+        input, select {
+            margin: 8px 0 5px 0; /* Adjusted margin to make space for error message */
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #4e774e;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px; /* Adjusted margin for label */
+        }
+
+        .signup-btn {
+            margin-top: 20px;
+            background: #6a9c6a;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%; /* Make button full width */
+            transition: background-color 0.3s ease;
+        }
+
+        .signup-btn:hover {
+            background-color: #5b875b;
+        }
+
+        .right-panel {
+            width: 50%;
+            position: relative;
+            background-image: url('back.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column; /* Changed to column to stack content */
+            align-items: center;
+            justify-content: center;
+            color: #FFFDF2;
+            text-align: center;
+            overflow: hidden;
+            padding: 30px; /* Added padding to ensure content isn't squished */
+        }
+
+        .right-panel::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .right-panel .content {
+            position: relative;
+            z-index: 1;
+            /* Removed fixed padding, now padding is on right-panel */
+        }
+
+        .right-panel h2 {
+            font-size: 28px;
+            margin-bottom: 20px; /* Adjusted margin to allow for other elements */
+        }
+
+        .right-panel p {
+            margin-bottom: 30px; /* Adjusted margin */
+            font-size: 14px;
+        }
+
+        .login-btn {
+            background-color: #6a9c6a;
+            border: none;
+            padding: 12px 200px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            text-decoration: none; /* Important for anchor tags */
+            display: inline-block; /* Essential for anchor tags to respect padding/width */
+            width: fit-content; /* Ensure it wraps content or adjust as needed */
+            margin: 0 auto; /* Center the button if its width is less than container */
+        }
+
+        .login-btn:hover {
+            background-color: #5b875b;
+        }
+
+        /* Form group styling for consistent layout */
+        .form-group {
+            margin-bottom: 15px; /* Spacing between form elements */
+            width: 100%;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .required {
+            color: #D40A0A;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #D40A0A; /* Red color for error messages */
+            font-size: 12px;
+            margin-top: 5px;
+            display: block; /* Ensures it takes its own line */
+        }
+
+        /* Success message styling */
+        .success-message {
+            color: #4e774e; /* Green color for success messages */
+            font-size: 14px;
+            margin-top: 15px;
+            text-align: center;
+            display: block;
+        }
+
+        /* General Firebase error message */
+        #firebase-error-message {
+            color: #D40A0A;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <h2>Create Account</h2>
+            <button class="google-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png" alt="Google" />
+                Sign Up With Google
+            </button>
+            <div class="or">or</div>
+
+            <div class="form-group">
+                <label for="username">Name <span class="required">*</span></label>
+                <input type="text" id="username" placeholder="Name" />
+                <span class="error-message" id="username-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email <span class="required">*</span></label>
+                <input type="email" id="email" placeholder="User@gmail.com" />
+                <span class="error-message" id="email-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password <span class="required">*</span></label>
+                <input type="password" id="password" placeholder="********" />
+                <span class="error-message" id="password-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="position">Position <span class="required">*</span></label>
+                <select id="position">
+                    <option value="">Select Position</option>
+                    <option value="chef">chef</option>
+                    <option value="user">user</option>
+                </select>
+                <span class="error-message" id="position-error"></span>
+            </div>
+
+            <button class="signup-btn" id="signup-btn">Sign Up</button>
+            <span class="success-message" id="signup-success-message"></span>
+            <span class="error-message" id="firebase-error-message"></span>
+        </div>
+
+        <div class="right-panel">
+            <div class="content">
+                <h2>Welcome Back!</h2>
+                <p style="font-size: large;">Log in to discover, save, and share <br>wholesome recipes.</p>
+                <!-- Anchor tag for LogIn page -->
+                <a href="login.html" class="login-btn">LogIn</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOx5M2CvYKEtPbf7NCV43Pn0YHba3xDBA",
+            authDomain: "freshfork-3db94.firebaseapp.com",
+            projectId: "freshfork-3db94",
+            storageBucket: "freshfork-3db94.appspot.com",
+            messagingSenderId: "519870760639",
+            appId: "1:519870760639:web:8267f8fc8e3c220527680a",
+            measurementId: "G-9NYYPXWTP7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleButton = document.querySelector('.google-btn');
+        googleButton.addEventListener('click', async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        console.log('Google Sign-In successful:', user);
+
+        // Optional: Save user data to Firestore (if new user)
+        const userDoc = doc(db, "Users", user.uid);
+        await setDoc(userDoc, {
+            username: user.displayName || '',
+            email: user.email,
+            isChef: false, // Default position for Google sign-in
+            createdAt: serverTimestamp()
+        }, { merge: true });
+
+        // Redirect to home page
+        window.location.href = 'home-sign.html';
+
+    } catch (error) {
+        console.error('Error during Google Sign-In:', error);
+        firebaseErrorMessage.textContent = error.message;
+    }
+});
+
+
+        // Get references to error message elements
+        const usernameError = document.getElementById('username-error');
+        const emailError = document.getElementById('email-error');
+        const passwordError = document.getElementById('password-error');
+        const positionError = document.getElementById('position-error');
+        const signupSuccessMessage = document.getElementById('signup-success-message');
+        const firebaseErrorMessage = document.getElementById('firebase-error-message');
+
+        // Function to clear all error messages
+        function clearErrorMessages() {
+            usernameError.textContent = '';
+            emailError.textContent = '';
+            passwordError.textContent = '';
+            positionError.textContent = '';
+            signupSuccessMessage.textContent = '';
+            firebaseErrorMessage.textContent = '';
+        }
+
+        document.getElementById('signup-btn').addEventListener('click', async () => {
+            clearErrorMessages(); // Clear previous messages on new attempt
+
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const position = document.getElementById("position").value;
+
+            let hasError = false;
+
+            // Name validation
+            if (username === '') {
+                usernameError.textContent = 'Name is required.';
+                hasError = true;
+            } else if (/^\d+$/.test(username)) { // Regex to check if string contains ONLY digits
+                usernameError.textContent = 'Name cannot be numbers only.';
+                hasError = true;
+            }
+
+            // Email validation
+            if (email === '') {
+                emailError.textContent = 'Email is required.';
+                hasError = true;
+            } else if (!email.includes('@') || !email.includes('.')) {
+                emailError.textContent = 'Please enter a valid email address.';
+                hasError = true;
+            }
+
+            // Password validation
+            if (password === '') {
+                passwordError.textContent = 'Password is required.';
+                hasError = true;
+            } else if (password.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters long.';
+                hasError = true;
+            }
+
+            // Position validation
+            if (position === '') {
+                positionError.textContent = 'Position is required.';
+                hasError = true;
+            }
+
+            if (hasError) {
+                // Stop the function if there are validation errors
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const uid = userCredential.user.uid;
+                console.log("User created with UID:", uid);
+
+                await setDoc(doc(db, "Users", uid), {
+                    username: username,
+                    email: email,
+                    isChef: position === "chef",
+                    createdAt: serverTimestamp()
+                });
+
+                signupSuccessMessage.textContent = "Account created and user data saved successfully! Redirecting...";
+                // Redirect to home-sign.html after successful signup
+                setTimeout(() => {
+                    window.location.href = 'home-sign.html'; 
+                }, 1500); // Give user time to read success message
+
+                // Optionally clear form fields after successful sign up
+                document.getElementById("username").value = '';
+                document.getElementById("email").value = '';
+                document.getElementById("password").value = '';
+                document.getElementById("position").value = ''; // Reset select to default
+            } catch (error) {
+                console.error("Error during sign up:", error);
+                let errorMessage = "An unknown error occurred. Please try again."; // More general fallback
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'The email address is already in use by another account.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'The email address is not valid.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'Email/password accounts are not enabled. Enable it in Firebase console.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'The password is too weak (must be at least 6 characters).';
+                        break;
+                    default:
+                        // For other Firebase errors, just use the provided message if available, otherwise a generic one
+                        errorMessage = error.message || "An error occurred during sign up.";
+                        break;
+                }
+                firebaseErrorMessage.textContent = errorMessage;
+            }
+        });
+    </script>
+</body>
+</html>

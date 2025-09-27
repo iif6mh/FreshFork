@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshFork - Liked Recipes</title>
+    <style>
+        /* Base Styles - Reused from Explore page for consistency */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #FFFDF2; /* Changed to unify background color to #FFFDF2 */
+            color: #1a6e1a; /* Changed to match Explore page body color */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Navbar - Reused from Explore page */
+        .navbar {
+            background-color: #6a9c6a;
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .navbar-logo {
+            color: #FFFDF2;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            text-decoration: none;
+            margin-right: 2rem;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .navbar-link {
+            color: #FFFDF2;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-link:hover {
+            color: #4e774e;
+        }
+
+        .navbar-link.active {
+            font-weight: bold;
+            /* Optionally add an underline or different background for active link */
+            text-decoration:solid; 
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 2.5rem;
+            padding-right: 1rem;
+            border-radius: 0.25rem;
+            background-color: #FFFDF2;
+            color: #6a9c6a;
+            border: none;
+            outline: none;
+            box-shadow: 0 0 0 2px transparent;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: #6a9c6a;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 2px #6a9c6a;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #6a9c6a;
+        }
+
+        .logout-button {
+            background-color: transparent;
+            color: #D40A0A;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .logout-button:hover {
+            background-color: #D40A0A;
+            color: #FFFFFF;
+        }
+
+        /* Main Content Specific Styles - Adapted for Liked Recipes page */
+        main {
+            flex-grow: 1;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            background-color: #FFFDF2; /* This is already #FFFDF2, matches body now */
+            margin: 20px auto; /* Center the content */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Subtle shadow for the main content area */
+            max-width: 1160px; /* Slightly less than container to show body background */
+            width: 95%; /* Responsive width */
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .main-heading {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: #4e774e;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .filter-section {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            justify-content: flex-start;
+            gap: 1rem;
+        }
+
+        .filter-button {
+            background-color: #FFFDF2;
+            border: 1px solid #e0e0e0;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6a9c6a; /* Changed to match Explore page filter button color */
+            transition: background-color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-button:hover {
+            background-color: #D9E2CE; /* Changed to match Explore page filter button hover */
+        }
+
+        .filter-button svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Filter Dropdown Styles - Reused from Explore Page */
+        .filter-dropdown {
+            position: absolute;
+            top: 100%; /* Position below the button */
+            left: 0;
+            background-color: #FFFDF2;
+            border: 1px solid #e0e0e0;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            z-index: 10; /* Ensure it's above other content */
+            min-width: 250px;
+            display: none; /* Hidden by default */
+            margin-top: 0.5rem; /* Space between button and dropdown */
+        }
+
+        .filter-dropdown.show {
+            display: block; /* Show when 'show' class is present */
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group-title {
+            font-weight: bold;
+            color: #4e774e;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .filter-group-title svg {
+            width: 1rem;
+            height: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .filter-group-title.expanded svg {
+            transform: rotate(180deg);
+        }
+
+        .filter-options {
+            list-style: none;
+            padding: 0;
+            margin-left: 0.5rem; /* Indent checkboxes */
+            display: none; /* Hidden by default */
+        }
+
+        .filter-options.show {
+            display: block; /* Show when 'show' class is present */
+        }
+
+        .filter-options li {
+            margin-bottom: 0.25rem;
+        }
+
+        .filter-options input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        /* Recipe Grid - Reused from Explore page */
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .recipe-card {
+            background-color: #6a9c6a; /* Changed to match Explore page recipe card background */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Added class for removed cards to keep their space */
+        .recipe-card.removed {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+            /* Keep the element in the document flow but make it invisible */
+            /* Do not use display: none, as it would cause reflow */
+        }
+
+
+        .image-wrapper {
+            background-color: #6a9c6a; /* Green background */
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            padding: 1.25rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .recipe-card-image {
+            width: 280px; /* Made smaller as per request */
+            height: 180px; /* Made smaller as per request */
+            max-width: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            display: block;
+        }
+
+        .recipe-card-content {
+            color: #1a6e1a;
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .nutrition-actions-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .recipe-card-nutrition {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.5rem;
+            font-size: 0.8rem;
+            color: #1a6e1a; /* Changed to match Explore page nutrition text color */
+            margin-top: 15px; /* Changed to match Explore page nutrition margin-top */
+            margin-bottom: 0; /* Changed to match Explore page nutrition margin-bottom */
+            line-height: 1.2;
+        }
+
+        .nutrition-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #1a6e1a; /* Changed to match Explore page nutrition strong color */
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px; /* Added to match Explore page nutrition margin-bottom */
+            line-height: 1.2;
+        }
+
+        .nutrition-item strong {
+            color: #1a6e1a; /* Changed to match Explore page nutrition strong color */
+            font-size: 1rem;
+            margin-right: 0;
+            margin-bottom: 0.25rem;
+        }
+
+        .recipe-card-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .action-icon-wrapper {
+            background-color: #FFFDF2; /* Changed to match Explore page action icon wrapper background */
+            border: 1px solid #ccc; /* Changed to match Explore page action icon wrapper border */
+            border-radius: 0.25rem;
+            padding: 0.4rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            width: 2.25rem;
+            height: 2.25rem;
+        }
+
+        .action-icon-wrapper:hover {
+            background-color: #D9E2CE; /* Changed to match Explore page action icon wrapper hover */
+            border-color: #6a9c6a; /* Changed to match Explore page action icon wrapper hover */
+        }
+
+        .action-icon-wrapper .action-icon {
+            color: #333; /* Default icon color (not liked) */
+            width: 1.25rem;
+            height: 1.25rem;
+            padding: 0;
+            border-radius: 0;
+            display: block;
+        }
+
+        /* Style for the liked heart icon */
+        .action-icon-wrapper.heart.liked .action-icon {
+            color: #D40A0A; /* Red for liked heart */
+        }
+
+        .action-icon-wrapper.heart:hover {
+            background-color: #FFEBEE;
+            border-color: #D40A0A;
+        }
+
+        /* Specific hover for heart icon itself (will be overridden by .liked .action-icon for liked state) */
+        .action-icon-wrapper.heart:hover .action-icon {
+            color: #D40A0A;
+        }
+
+        /* Copy message styles - Reused from Explore page */
+        .copy-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #6a9c6a;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1001;
+        }
+        .copy-message.show {
+            opacity: 1;
+        }
+
+
+        /* Footer - Reused from Explore page */
+        .footer {
+            background-color: #6a9c6a;
+            color: #FFFDF2;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            margin-top: 0px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+             @media (min-width: 768px) {
+    .footer-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+        .footer-col h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col h4 {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col p {
+            color: #4e774e;
+            font-size: large;
+            font-weight: 500;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col a {
+            color: #FFFDF2;
+            text-decoration: none;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .contact-input, .contact-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            background-color: #FFFDF2;
+            color: #333;
+            border: none;
+            outline: none;
+            box-shadow: 0 0 0 2px transparent;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .contact-input::placeholder {
+            color: #6a9c6a;
+        }
+
+        .contact-input:focus {
+            box-shadow: 0 0 0 2px #6a9c6a;
+        }
+
+        .contact-textarea {
+            margin-bottom: 0.5rem;
+            margin-top: 10px;
+            color: #6a9c6a;
+        }
+
+        .send-button {
+            background-color: #5b875b;
+            color: #FFFFFF;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .send-button:hover {
+            background-color: #4e774e;
+        }
+
+        /* Re-added specific contact status styles for inline display */
+        .contact-status {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #6a9c6a; /* Default color for success/info */
+        }
+        .contact-status.text-fresh-error-red {
+            color: #D40A0A; /* Red for error messages */
+        }
+        .contact-status.text-fresh-light-green {
+            color: #6a9c6a; /* Green for success messages */
+        }
+
+        .footer-copyright {
+            text-align: center;
+            color: #4e774e;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .user-info-display {
+            text-align: center;
+            color: #6a9c6a;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Message Box for general alerts (not contact form specific) */
+        .message-box {
+            position: fixed;
+            top: 50%; /* Changed to center vertically */
+            left: 50%;
+            transform: translate(-50%, -50%); /* Changed to center both horizontally and vertically */
+            background-color: #6a9c6a; 
+            color: #fff; /* Changed to match overall pop-up text color */
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1001;
+            text-align: center;
+            font-family: "Inter", sans-serif;
+            display: none; /* Hidden by default */
+            flex-direction: column; /* To center button */
+            align-items: center; /* To center button */
+        }
+        .message-box.show {
+            opacity: 1;
+            display: flex;
+        }
+        .message-box button {
+            margin-top: 15px;
+            padding: 8px 15px;
+            background-color: #5b875b; 
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .message-box.error {
+            background-color: #D40A0A; /* Red background for error messages in the general message box */
+        }
+        
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <a href="home-sign.html" class="navbar-logo">FreshFork</a> 
+            <div class="navbar-links">
+                <a href="home-sign.html" class="navbar-link">Home</a>
+                <a href="Explore.html" class="navbar-link">Explore</a>
+                <a href="liked.html" class="navbar-link active">Liked</a> <a href="Profile.html" class="navbar-link">Profile</a>
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input" id="search-input">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <a href="#" class="logout-button" id="logout-link">Log Out</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h2 class="main-heading">Liked recipes</h2>
+        
+        <div class="filter-section">
+            <button class="filter-button" id="filter-button">
+                Filter
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="filter-dropdown" id="filter-dropdown">
+                <div class="filter-group">
+                    <div class="filter-group-title" data-filter-group="mealTypes">
+                        Meal
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                    </div>
+                    <ul class="filter-options">
+                        <li><input type="checkbox" id="meal-breakfast" value="breakfast"><label for="meal-breakfast">Breakfast</label></li>
+                        <li><input type="checkbox" id="meal-lunch" value="lunch"><label for="meal-lunch">Lunch</label></li>
+                        <li><input type="checkbox" id="meal-dinner" value="dinner"><label for="meal-dinner">Dinner</label></li>
+                        <li><input type="checkbox" id="meal-snacks" value="snacks"><label for="meal-snacks">Snacks</label></li>
+                        <li><input type="checkbox" id="meal-desserts" value="desserts"><label for="meal-desserts">Desserts</label></li>
+                    </ul>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-group-title" data-filter-group="dietaries">
+                        Dietary
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                    </div>
+                    <ul class="filter-options">
+                        <li><input type="checkbox" id="dietary-vegan" value="vegan"><label for="dietary-vegan">Vegan</label></li>
+                        <li><input type="checkbox" id="dietary-vegetarian" value="vegetarian"><label for="dietary-vegetarian">Vegetarian</label></li>
+                        <li><input type="checkbox" id="dietary-gluten-free" value="gluten-free"><label for="dietary-gluten-free">Gluten-Free</label></li>
+                        <li><input type="checkbox" id="dietary-high-protein" value="high-protein"><label for="dietary-high-protein">High-Protein</label></li>
+                        <li><input type="checkbox" id="dietary-low-carb" value="low-carb"><label for="dietary-low-carb">Low-Carb</label></li>
+                    </ul>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-group-title" data-filter-group="times">
+                        Time to Cook
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                    </div>
+                    <ul class="filter-options">
+                        <li><input type="checkbox" id="time-under-15" value="under-15-mins"><label for="time-under-15">Under 15 mins</label></li>
+                        <li><input type="checkbox" id="time-under-30" value="under-30-mins"><label for="time-under-30">Under 30 mins</label></li>
+                        <li><input type="checkbox" id="time-under-60" value="under-1-hour"><label for="time-under-60">Under 1 hour</label></li>
+                    </ul>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-group-title" data-filter-group="ingredients">
+                        Main Ingredient
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                    </div>
+                    <ul class="filter-options">
+                        <li><input type="checkbox" id="ingredient-chicken" value="chicken"><label for="ingredient-chicken">Chicken</label></li>
+                        <li><input type="checkbox" id="ingredient-fish" value="fish"><label for="ingredient-fish">Fish</label></li>
+                        <li><input type="checkbox" id="ingredient-quinoa" value="quinoa"><label for="ingredient-quinoa">Quinoa</label></li>
+                        <li><input type="checkbox" id="ingredient-rice" value="rice"><label for="ingredient-rice">Rice</label></li>
+                        <li><input type="checkbox" id="ingredient-sweet-potato" value="sweet-potato"><label for="ingredient-sweet-potato">Sweet Potato</label></li>
+                        <li><input type="checkbox" id="ingredient-oats" value="oats"><label for="ingredient-oats">Oats</label></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-grid" id="recipe-grid">
+            <p id="loading-message" style="text-align: center; color: #4e774e; font-size: 1.1rem; grid-column: 1 / -1;">Loading your liked recipes...</p>
+            <p id="no-recipes-message" style="display: none; text-align: center; color: #4e774e; font-size: 1.1rem; grid-column: 1 / -1;">You haven't liked any recipes yet. Go to <a href="Explore.html" style="color: #6a9c6a; text-decoration: underline;">Explore</a> to find some!</p>
+        </div>
+    </main>
+
+    <div id="copy-message" class="copy-message">
+        Link copied to clipboard!
+    </div>
+
+    <div id="message-box" class="message-box">
+        <p id="message-box-text"></p>
+        <button onclick="document.getElementById('message-box').classList.remove('show', 'error');">OK</button>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h3 style="font-weight: 500;">FreshFork</h3>
+                <p style="font-size: large; font-weight: 500;">Clean eating, easy <br>sharing</p>
+            </div>
+            <div class="footer-col">
+                <h4>Social Media</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">TikTok</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <div class="contact-form-group">
+                    <input type="email" id="contact-email" placeholder="Your Email" class="contact-input">
+                    <textarea id="contact-message" placeholder="Your Message" rows="4" class="contact-textarea"></textarea>
+                    <button id="send-contact-btn" class="send-button">Send</button>
+                    <div id="contact-status" class="contact-status"></div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p style="font-size:medium; color: #f0f0f0;">&copy; 2025 FreshFork. All rights reserved.</p>
+        </div>
+        <div class="user-info-display" id="user-info"></div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getFirestore, doc, collection, setDoc, serverTimestamp, getDocs, query, where, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        // Global variables for Firebase config (replace with your actual Firebase project config)
+        // These are placeholders. In a real application, you'd likely fetch these from an environment variable or a secure configuration file.
+       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAOx5M2CvYKEtPbf7NCV43Pn0YHba3xDBA",
+  authDomain: "freshfork-3db94.firebaseapp.com",
+  projectId: "freshfork-3db94",
+  storageBucket: "freshfork-3db94.firebasestorage.app",
+  messagingSenderId: "519870760639",
+  appId: "1:519870760639:web:8267f8fc8e3c220527680a",
+  measurementId: "G-9NYYPXWTP7"
+};
+
+        // Initialize Firebase
+        let app, auth, db;
+        let currentUserId = null; 
+        let likedRecipesCache = new Set(); // Cache for liked recipe IDs
+        let allLikedRecipesData = []; // Stores all liked recipes fetched from Firestore
+        let isAuthReady = false; 
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase initialized.");
+        } catch (error) {
+            console.error("Failed to initialize Firebase:", error);
+            showMessageBox("Error initializing Firebase. Please try again later.", true);
+        }
+
+        // --- DOM Elements ---
+        const recipeGrid = document.getElementById('recipe-grid');
+        const loadingMessage = document.getElementById('loading-message');
+        const noRecipesMessage = document.getElementById('no-recipes-message');
+        const userInfoDiv = document.getElementById('user-info');
+        const contactEmailInput = document.getElementById('contact-email');
+        const contactMessageInput = document.getElementById('contact-message');
+        const sendContactBtn = document.getElementById('send-contact-btn');
+        const contactStatusDiv = document.getElementById('contact-status');
+        const logoutLink = document.getElementById('logout-link');
+        const filterButton = document.getElementById('filter-button');
+        const filterDropdown = document.getElementById('filter-dropdown');
+        const searchInput = document.getElementById('search-input');
+        const copyMessage = document.getElementById('copy-message');
+        const messageBox = document.getElementById('message-box');
+        const messageBoxText = document.getElementById('message-box-text');
+
+        // --- Utility Functions ---
+
+        function showMessageBox(message, isError = false) {
+            messageBoxText.textContent = message;
+            messageBox.classList.add('show');
+            if (isError) {
+                messageBox.classList.add('error');
+            } else {
+                messageBox.classList.remove('error');
+            }
+        }
+
+        function showCopyMessage() {
+            copyMessage.classList.add('show');
+            setTimeout(() => {
+                copyMessage.classList.remove('show');
+            }, 2000);
+        }
+
+       async function copyLink(event) {
+    event.stopPropagation(); // لمنع تنفيذ حدث النقر الأساسي على البطاقة
+    const recipeCard = event.target.closest('.recipe-card');
+    if (recipeCard) {
+        const recipeId = recipeCard.dataset.recipeId;
+        const link = `${window.location.origin}/detail.html?id=${recipeId}`;
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'Check out this recipe on FreshFork!',
+                    text: `I found a great recipe: ${recipeCard.querySelector('h3').textContent}`,
+                    url: link,
+                });
+                console.log('Recipe shared successfully');
+            } else {
+                await navigator.clipboard.writeText(link);
+                showCopyMessage();
+                console.log('Recipe link copied to clipboard');
+            }
+        } catch (err) {
+            console.error('Failed to share/copy link: ', err);
+            showMessageBox('Failed to share or copy link. Please try again.');
+        }
+    }
+}
+
+function safeArray(value) {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') {
+        return value
+            .split(/[, ]+/) // split by comma or space
+            .map(v => v.trim())
+            .filter(v => v);
+    }
+    return [];
+}
+function mapGroupToRecipeField(group) {
+    const map = {
+        mealTypes: 'meal',     
+        dietaries: 'dietary',    
+        times: 'timeToCook',     
+        ingredients: 'mainIngredient'  
+    };
+    return map[group] || group;
+}
+
+
+        // --- Recipe Card Rendering ---
+
+        function createRecipeCard(recipe) {
+            const card = document.createElement('div');
+            card.classList.add('recipe-card');
+            card.dataset.recipeId = recipe.recipeId;
+
+            const isLiked = likedRecipesCache.has(recipe.recipeId);
+
+            card.innerHTML = `
+                <div class="image-wrapper">
+                    <img src="${recipe.imageUrl}" alt="${recipe.title}" class="recipe-card-image">
+                </div>
+                <div class="recipe-card-content">
+                    <h3 style="color: #FFFDF2; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3;">${recipe.title}</h3>
+                    <p style="color: #D9E2CE; font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; flex-grow: 1;">${recipe.description}</p>
+                    <div class="nutrition-actions-wrapper">
+                        <div class="recipe-card-nutrition">
+                            <div class="nutrition-item">
+                                <strong>${recipe.nutrition.calories}</strong>
+                                <span>Calories</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <strong>${recipe.nutrition.carbs}g</strong>
+                                <span>Carbs</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <strong>${recipe.nutrition.protein}g</strong>
+                                <span>Protein</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <strong>${recipe.nutrition.fat}g</strong>
+                                <span>Fat</span>
+                            </div>
+                        </div>
+                        <div class="recipe-card-actions">
+  <div class="action-icon-wrapper share" data-action="share" style="color: #5b875b;">
+  <svg class="action-icon" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="18" cy="5" r="3" />
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="19" r="3" />
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+    <line x1="8.59" y1="10.49" x2="15.42" y2="6.51" />
+  </svg>
+</div>
+<div class="action-icon-wrapper heart ${isLiked ? 'liked' : ''}" data-action="like" style="color: ${isLiked ? '#e0245e' : 'inherit'};">
+  <svg class="action-icon" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+  </svg>
+</div>
+
+
+                    </div>
+                </div>
+            `;
+
+            // Attach event listeners
+            card.querySelector('[data-action="share"]').addEventListener('click', copyLink);
+card.querySelector('[data-action="like"]').addEventListener('click', (event) => {
+    event.stopPropagation(); // Prevents triggering the card click
+    toggleLike(card, recipe.recipeId);
+});
+
+            card.addEventListener('click', () => {
+    window.location.href = `detail.html?id=${recipe.recipeId}`;
+});
+
+            return card;
+        }
+
+        function displayRecipes(recipesToDisplay) {
+            recipeGrid.innerHTML = ''; // Clear existing recipes
+            if (recipesToDisplay.length === 0) {
+                noRecipesMessage.style.display = 'block';
+                loadingMessage.style.display = 'none';
+            } else {
+                noRecipesMessage.style.display = 'none';
+                loadingMessage.style.display = 'none';
+                recipesToDisplay.forEach(recipe => {
+                    recipeGrid.appendChild(createRecipeCard(recipe));
+                });
+            }
+        }
+
+        // --- Firebase Interactions ---
+
+        async function fetchLikedRecipes() {
+    if (!currentUserId) {
+        console.log("No user logged in. Cannot fetch liked recipes.");
+        loadingMessage.style.display = 'none';
+        noRecipesMessage.style.display = 'block';
+        return;
+    }
+
+    loadingMessage.style.display = 'block';
+    noRecipesMessage.style.display = 'none';
+    recipeGrid.innerHTML = ''; // Clear existing cards
+
+    try {
+        const likedRecipesRef = collection(db, `Users/${currentUserId}/Likes`);  // <-- exact path here
+        const querySnapshot = await getDocs(likedRecipesRef);
+
+        const currentLikedRecipes = [];
+
+        querySnapshot.forEach((doc) => {
+            const likedDocData = doc.data();
+
+            if (likedDocData.recipeData) {
+                currentLikedRecipes.push({
+                    recipeId: doc.id,
+                    title: likedDocData.recipeData.title || '',
+                    description: likedDocData.recipeData.description || '',
+                    imageUrl: likedDocData.recipeData.imageData || '',  // check your field name, you wrote imageData before
+                    nutrition: likedDocData.recipeData.nutrition || { calories: 0, carbs: 0, protein: 0, fat: 0 },
+                    meal: safeArray(likedDocData.recipeData.tags?.mealTypes),
+                    dietary: safeArray(likedDocData.recipeData.tags?.dietaries),
+                    timeToCook: safeArray(likedDocData.recipeData.tags?.times),
+                    mainIngredient: safeArray(likedDocData.recipeData.tags?.ingredients),
+                });
+            }
+        });
+
+        allLikedRecipesData = currentLikedRecipes;
+        likedRecipesCache = new Set(currentLikedRecipes.map(r => r.recipeId));
+
+        applyFiltersAndSearch();
+
+    } catch (error) {
+        console.error("Error fetching liked recipes: ", error);
+        showMessageBox("Error loading liked recipes. Please try again.", true);
+        loadingMessage.style.display = 'none';
+        noRecipesMessage.style.display = 'block';
+    }
+}
+
+
+        async function toggleLike(cardElement, recipeId) {
+            if (!currentUserId) {
+                showMessageBox("You must be logged in to unlike recipes.", true);
+                return;
+            }
+            const likedRef = doc(db, `Users/${currentUserId}/Likes/${recipeId}`);
+
+            const link = `${window.location.origin}/detail.html?recipeId=${recipeId}`;
+
+            if (likedRecipesCache.has(recipeId)) {
+                // Already liked, so unlike it
+                try {
+                    await deleteDoc(likedRef);
+                    likedRecipesCache.delete(recipeId);
+                    cardElement.classList.add('removed'); // Add class to trigger fade out
+                    setTimeout(() => {
+                        cardElement.remove(); // Remove after animation
+                        // Remove from allLikedRecipesData as well
+                        allLikedRecipesData = allLikedRecipesData.filter(recipe => recipe.recipeId !== recipeId);
+                        if (allLikedRecipesData.length === 0 && searchInput.value === '' && getActiveFilters().length === 0) {
+                            noRecipesMessage.style.display = 'block';
+                        }
+                    }, 500); // Match CSS transition duration
+                    showMessageBox("Recipe unliked successfully!");
+                } catch (e) {
+                    console.error("Error unliking recipe: ", e);
+                    showMessageBox("Error unliking recipe. Please try again.", true);
+                }
+            } else {
+                // Note: The Liked page should only show already liked recipes.
+                // This 'else' block is primarily for completeness if used elsewhere.
+                const recipeToAdd = ALL_AVAILABLE_RECIPES.find(r => r.recipeId === recipeId);
+                if (recipeToAdd) {
+                    try {
+                        await setDoc(likedRef, {
+                            // Store minimal data or a reference if recipes collection exists
+                            // For this example, we'll store a timestamp
+                            likedAt: serverTimestamp()
+                        });
+                        likedRecipesCache.add(recipeId);
+                        cardElement.classList.add('liked'); // Update UI
+                        allLikedRecipesData.push(recipeToAdd); // Add to the displayed list
+                        applyFiltersAndSearch(); // Re-render to ensure it shows up if filters match
+                        showMessageBox("Recipe liked!");
+                    } catch (e) {
+                        console.error("Error liking recipe: ", e);
+                        showMessageBox("Error liking recipe. Please try again.", true);
+                    }
+                }
+            }
+        }
+
+        // --- Filter and Search Logic ---
+
+        function getActiveFilters() {
+    const activeFilters = {};
+    filterDropdown.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        const filterGroupDiv = checkbox.closest('.filter-group');
+        if (!filterGroupDiv) return;
+        const title = filterGroupDiv.querySelector('.filter-group-title');
+        if (!title) return;
+        const group = title.dataset.filterGroup;
+        if (!group) return;
+        if (!activeFilters[group]) {
+            activeFilters[group] = [];
+        }
+        activeFilters[group].push(checkbox.value);
+    });
+    return activeFilters;
+}
+
+
+       function filterRecipes(recipes, activeFilters) {
+    return recipes.filter(recipe => {
+        for (const group in activeFilters) {
+            const selectedFilters = activeFilters[group];
+            if (selectedFilters.length === 0) continue;
+
+            const recipeField = mapGroupToRecipeField(group);
+            const recipeValues = recipe[recipeField] || [];
+
+            const hasMatch = selectedFilters.some(filterValue =>
+                recipeValues.includes(filterValue)
+            );
+            if (!hasMatch) return false;
+        }
+        return true;
+    });
+}
+
+
+
+        function searchRecipes(recipes, searchTerm) {
+            if (!searchTerm) return recipes;
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+            return recipes.filter(recipe =>
+                recipe.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+                recipe.description.toLowerCase().includes(lowerCaseSearchTerm)
+            );
+        }
+
+       function applyFiltersAndSearch() {
+    let filteredRecipes = allLikedRecipesData;
+    const activeFilters = getActiveFilters();
+    console.log("applyFiltersAndSearch: Active Filters Collected:", activeFilters); // ADD THIS - EXPAND THIS OBJECT IN CONSOLE
+
+    filteredRecipes = filterRecipes(filteredRecipes, activeFilters);
+    console.log("applyFiltersAndSearch: Recipes after filtering:", filteredRecipes); // ADD THIS - EXPAND THIS ARRAY
+
+    const searchTerm = searchInput.value;
+    filteredRecipes = searchRecipes(filteredRecipes, searchTerm);
+    console.log("applyFiltersAndSearch: Recipes after search:", filteredRecipes); // ADD THIS - EXPAND THIS ARRAY
+
+    displayRecipes(filteredRecipes);
+}
+
+        // --- Event Listeners ---
+
+        // Authentication State Change
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                userInfoDiv.textContent = `Logged in as: ${user.email || 'Anonymous User'}`;
+                await fetchLikedRecipes();
+            } else {
+                currentUserId = null;
+                userInfoDiv.textContent = 'Not logged in.';
+                likedRecipesCache.clear();
+                allLikedRecipesData = [];
+                displayRecipes([]); // Clear displayed recipes
+                noRecipesMessage.style.display = 'block'; // Show "no recipes" message
+                loadingMessage.style.display = 'none';
+            }
+            isAuthReady = true;
+        });
+
+        // Logout
+        if (logoutLink) {
+    logoutLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        signOut(auth)
+          .then(() => {
+              console.log("User signed out.");
+              window.location.href = "SignUp.html";
+          })
+          .catch((error) => {
+              console.error("Error signing out: ", error);
+              showMessageBox("Error logging out. Please try again.", true);
+          });
+    });
+} else {
+    console.error("Logout link not found in DOM.");
+}
+
+        // Filter button toggle
+        filterButton.addEventListener('click', () => {
+            filterDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown if clicking outside
+        document.addEventListener('click', (event) => {
+            if (!filterDropdown.contains(event.target) && !filterButton.contains(event.target)) {
+                filterDropdown.classList.remove('show');
+            }
+        });
+
+        // Filter group title click to expand/collapse
+        filterDropdown.querySelectorAll('.filter-group-title').forEach(title => {
+            title.addEventListener('click', () => {
+                const options = title.nextElementSibling;
+                const svg = title.querySelector('svg');
+                options.classList.toggle('show');
+                title.classList.toggle('expanded');
+                if (options.classList.contains('show')) {
+                    svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>'; // Up arrow
+                } else {
+                    svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>'; // Down arrow
+                }
+            });
+        });
+
+        // Apply filters when a checkbox changes
+        filterDropdown.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFiltersAndSearch);
+        });
+
+        // Search input
+        searchInput.addEventListener('input', applyFiltersAndSearch);
+
+        // Contact Form Submission
+       if (sendContactBtn) {
+    sendContactBtn.addEventListener('click', async () => {
+        const email = contactEmailInput.value.trim();
+        const message = contactMessageInput.value.trim();
+        const contactStatus = contactStatusDiv;
+
+        if (!email || !message) {
+            contactStatus.textContent = "Please fill in both email and message fields.";
+            contactStatus.classList.add('text-fresh-error-red');
+            contactStatus.classList.remove('text-fresh-light-green');
+            return;
+        }
+
+        contactStatus.textContent = "Sending...";
+        contactStatus.classList.remove('text-fresh-error-red', 'text-fresh-light-green');
+
+        try {
+            const contactMessagesRef = collection(db, "contact_messages");
+
+            await addDoc(contactMessagesRef, {
+                email,
+                message,
+                timestamp: serverTimestamp(),
+                userId: currentUserId
+            });
+
+            contactStatus.textContent = "Message sent successfully!";
+            contactStatus.classList.add('text-fresh-light-green');
+            contactStatus.classList.remove('text-fresh-error-red');
+            contactEmailInput.value = '';
+            contactMessageInput.value = '';
+        } catch (e) {
+            console.error("Error adding document: ", e);
+            contactStatus.textContent = "Error sending message. Please try again.";
+            contactStatus.classList.add('text-fresh-error-red');
+            contactStatus.classList.remove('text-fresh-light-green');
+        }
+    });
+}
+    </script>
+</body>
+</html>  

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FreshFork | Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base Styles */
+        body {
+            background-color: #f0f0e4; /* Light cream background */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to the top */
+            color: #6a9c6a;
+        }
+
+        /* Main Content Area */
+        main {
+            background: #fffdf2; /* Creamy white background for the card */
+            max-width: 600px; /* Adjusted max-width to closer match screenshot */
+            width: 90%; /* Responsive width */
+            margin-top: 50px; /* Space from the top */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .setting-heading {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #6a9c6a;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            background-color: #fffdf2; /* Match main background */
+            border-bottom: 1px solid #ddd; /* Line under profile section */
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #8B4513; /* Brownish color from image */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .profile-info h3 {
+            color: #6a9c6a;
+            font-size: 1.6rem;
+            margin: 0;
+            font-weight: normal; /* Less bold */
+        }
+
+        .profile-info p {
+            color: #888; /* Lighter grey for role */
+            font-size: 1rem;
+            margin: 5px 0 0;
+        }
+
+        .profile-detail-section {
+            margin-bottom: 10px; /* Closer spacing between sections */
+        }
+
+        .profile-detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px; /* Spacing between items */
+        }
+
+        .profile-detail-item label {
+            font-weight: normal; /* Not bold */
+            color: #6a9c6a;
+            flex-basis: 25%; /* Adjust width for label */
+            white-space: nowrap;
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .profile-detail-item p,
+        .profile-detail-item input {
+            flex-grow: 1;
+            color: #6a9c6a;
+            font-size: 1.05rem;
+            padding: 8px 0; /* Padding for readability */
+            border: none; /* No border for text/input */
+            background-color: transparent; /* Transparent background */
+            outline: none;
+            cursor: default; /* Default cursor for text */
+        }
+        
+        .profile-detail-item input {
+            border-bottom: 1px solid #ccc; /* Subtle bottom border for input */
+            padding: 8px 5px;
+            transition: border-color 0.3s ease;
+            cursor: text;
+        }
+        
+        .profile-detail-item input:focus {
+            border-color: #6a9c6a;
+        }
+
+        .profile-detail-item .value-text {
+            /* Span for static text values */
+            flex-grow: 1;
+            color: #6a9c6a;
+            font-size: 1.05rem;
+            padding: 8px 0;
+        }
+
+        .profile-detail-item button {
+            background-color: transparent;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 5px; /* Slightly rounded corners */
+            border: 1px solid #C8C8CD; /* Subtle border */
+            cursor: pointer;
+            font-weight: 500; /* Medium font weight */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            margin-left: 15px;
+            min-width: 90px; /* Ensure buttons have consistent width */
+            text-align: center;
+        }
+
+        .profile-detail-item button:hover {
+            background-color: #6a9c6a;
+            border-color: #A0A0A5;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            main {
+                padding: 20px;
+                margin: 30px auto 15px;
+            }
+
+            .profile-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+                margin-right: 15px;
+            }
+
+            .profile-info h3 {
+                font-size: 1.4rem;
+            }
+
+            .profile-info p {
+                font-size: 0.9rem;
+            }
+
+            .profile-detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .profile-detail-item label {
+                margin-bottom: 5px;
+                flex-basis: auto;
+            }
+
+            .profile-detail-item p,
+            .profile-detail-item input {
+                width: 100%;
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+
+            .profile-detail-item button {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 0;
+            }
+        }
+        .message-box {
+    display: none;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #6a9c6a;
+    color: #fffdf2;
+    padding: 1rem 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+    min-width: 250px;
+}
+
+.message-box p {
+    background-color: #6a9c6a;
+    margin-bottom: 1.1rem;
+    font-size: 1.1rem;
+}
+
+.message-button-container {
+    display: flex;
+    margin-top: 50px;
+    justify-content: center;
+}
+
+.message-button-container button {
+    background-color: #6a9c6a;
+    color: #fffdf2;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1.3rem;
+    font-size: 1rem;
+    cursor: pointer;   
+    margin-right: 0px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.message-button-container button:hover {
+    background-color: #156415;
+}
+
+    </style>
+</head>
+<body>
+    <header style="display: none;"> 
+        <a href="home-sign.html" class="header-logo"><b>FreshFork</b></a>
+        <nav>
+            <a href="home-sign.html">Home</a>
+            <a href="Explore.html">Explore</a>
+            <a href="liked.html">Liked</a>
+            <a href="profile.html" class="active">Profile</a>
+        </nav>
+        <div class="header-search-container">
+            <input type="text" placeholder="Search" class="header-search-input">
+            <svg class="header-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <a href="signup.html" class="header-logout-button" id="logout-link">Log Out</a>
+    </header>
+
+    <main>
+        <div class="setting-heading">Setting</div>
+        <h2>Profile</h2>
+
+        <div class="profile-card">
+            <div class="profile-avatar" id="profile-avatar">OA</div>
+            <div class="profile-info">
+                <h3 id="profile-name">Omar Alnajjar</h3>
+                <p id="profile-role">A Chef</p>
+            </div>
+        </div>
+
+        <div class="profile-detail-section">
+            <div class="profile-detail-item">
+                <label>Name</label>
+                <p id="display-name" class="value-text">Omar Alnajjar</p>
+                <input type="text" id="edit-name" value="Omar Alnajjar" style="display:none;">
+                <button id="btn-edit-name">Edit</button>
+            </div>
+        </div>
+
+        <div class="profile-detail-section">
+            <div class="profile-detail-item">
+                <label>Email</label>
+                <p id="display-email" class="value-text">Omar.Alnajjar@gmail.com</p>
+                <input type="email" id="edit-email" value="Omar.Alnajjar@gmail.com" style="display:none;">
+                <button id="btn-edit-email">Edit</button>
+            </div>
+        </div>
+
+        <div class="profile-detail-section">
+            <div class="profile-detail-item">
+                <label>Passowrd</label> <p class="value-text">*********</p>
+                <button id="btn-update-password">Update</button>
+            </div>
+        </div>
+
+        <div class="profile-detail-section">
+            <div class="profile-detail-item">
+                <label>Your Recipes</label>
+                <p class="value-text"></p> <button id="btn-view-recipes">View</button>
+            </div>
+        </div>
+    </main>
+
+  <div id="message-box" class="message-box">
+    <p id="message-box-text"></p>
+    <div class="message-button-container">
+        <button onclick="document.getElementById('message-box').style.display = 'none';">OK</button>
+    </div>
+</div>
+
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, updateProfile, updateEmail, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        // Provided Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOx5M2CvYKEtPbf7NCV43Pn0YHba3xDBA",
+            authDomain: "freshfork-3db94.firebaseapp.com",
+            projectId: "freshfork-3db94",
+            storageBucket: "freshfork-3db94.appspot.com",
+            messagingSenderId: "519870760639",
+            appId: "1:519870760639:web:8267f8fc8e3c220527680a",
+            measurementId: "G-9NYYPXWTP7"
+        };
+
+        // Initialize Firebase
+        let app, auth, db;
+        let currentUserId = null;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase initialized for Profile page.");
+        } catch (error) {
+            console.error("Failed to initialize Firebase:", error);
+            showMessageBox('Error initializing application services. Please ensure your Firebase project configuration is correct.', true);
+        }
+
+        // --- DOM Elements ---
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileNameDisplay = document.getElementById('profile-name');
+        const profileRoleDisplay = document.getElementById('profile-role');
+        const displayName = document.getElementById('display-name');
+        const editNameInput = document.getElementById('edit-name');
+        const btnEditName = document.getElementById('btn-edit-name');
+
+        const displayEmail = document.getElementById('display-email');
+        const editEmailInput = document.getElementById('edit-email');
+        const btnEditEmail = document.getElementById('btn-edit-email');
+
+        const btnUpdatePassword = document.getElementById('btn-update-password');
+        const btnViewRecipes = document.getElementById('btn-view-recipes');
+        const logoutLink = document.getElementById('logout-link');
+
+        // Message box elements
+        const messageBox = document.getElementById('message-box');
+        const messageBoxText = document.getElementById('message-box-text');
+
+        // --- Helper for general message box ---
+        function showMessageBox(message, isError = false) {
+    messageBoxText.textContent = message;
+
+    // Use consistent success and error colors
+    messageBox.style.backgroundColor = isError ? '#D40A0A' : '#6a9c6a';
+
+    messageBox.style.display = 'flex';
+    setTimeout(() => {
+        messageBox.style.display = 'none';
+    }, 3000);
+}
+
+
+        // --- Function to generate a color from a string (for avatar background) ---
+        function stringToColor(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            let color = '#';
+            for (let i = 0; i < 3; i++) {
+                const value = (hash >> (i * 8)) & 0xFF;
+                color += ('00' + value.toString(16)).substr(-2);
+            }
+            return color;
+        }
+
+        // --- Fetch and Display User Data ---
+        async function fetchAndDisplayUserData(user) {
+            if (user) {
+                currentUserId = user.uid;
+
+                const initials = user.displayName ? user.displayName.split(' ').map(n => n[0]).join('').toUpperCase() : (user.email ? user.email[0].toUpperCase() : 'U');
+                profileAvatar.textContent = initials;
+                profileAvatar.style.backgroundColor = stringToColor(currentUserId);
+
+
+                profileNameDisplay.textContent = user.displayName || user.email;
+                displayName.textContent = user.displayName || 'Not set';
+                editNameInput.value = user.displayName || '';
+
+                displayEmail.textContent = user.email || 'Not set';
+                editEmailInput.value = user.email || '';
+                
+                profileRoleDisplay.textContent = 'User'; 
+
+                try {
+                    const userDocRef = doc(db, 'Users', currentUserId); 
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        console.log("Firestore user data:", userData);
+                        if (userData.username) {
+                            displayName.textContent = userData.username;
+                            editNameInput.value = userData.username;
+                            profileNameDisplay.textContent = userData.username;
+                            profileAvatar.textContent = userData.username.split(' ').map(n => n[0]).join('').toUpperCase();
+                        }
+                        if (typeof userData.isChef === 'boolean') {
+                            profileRoleDisplay.textContent = userData.isChef ? 'A Chef' : 'User';
+                        } else {
+                            profileRoleDisplay.textContent = 'User';
+                        }
+                    } else {
+                        console.log("No custom profile data found in Firestore for user:", currentUserId);
+                        profileRoleDisplay.textContent = 'User';
+                    }
+                } catch (firestoreError) {
+                    console.error("Error fetching Firestore user data:", firestoreError);
+                    profileRoleDisplay.textContent = 'User';
+                }
+
+                console.log("User data displayed:", user.uid);
+            } else {
+                profileAvatar.textContent = 'OA';
+                profileAvatar.style.backgroundColor = '#8B4513'; /* Default color from image */
+                profileNameDisplay.textContent = 'Guest User';
+                profileRoleDisplay.textContent = 'Guest';
+                displayName.textContent = 'N/A';
+                editNameInput.value = '';
+                displayEmail.textContent = 'N/A';
+                editEmailInput.value = '';
+                console.log("No user authenticated. Displaying default profile.");
+            }
+        }
+
+        // --- Authentication State Listener ---
+        onAuthStateChanged(auth, (user) => {
+            fetchAndDisplayUserData(user);
+        });
+
+        // --- Edit/Save Name Logic ---
+        btnEditName.addEventListener('click', async () => {
+            if (!auth.currentUser) {
+                showMessageBox('Please log in to edit your profile.', true);
+                return;
+            }
+
+            if (btnEditName.textContent === 'Edit') {
+                displayName.style.display = 'none';
+                editNameInput.style.display = 'block';
+                btnEditName.textContent = 'Save';
+            } else {
+                const newName = editNameInput.value.trim();
+                if (newName && newName !== auth.currentUser.displayName) {
+                    try {
+                        await updateProfile(auth.currentUser, { displayName: newName });
+                        const userDocRef = doc(db, 'Users', currentUserId);
+                        await setDoc(userDocRef, { username: newName }, { merge: true });
+
+                        showMessageBox('Name updated successfully!', false);
+                        fetchAndDisplayUserData(auth.currentUser);
+                    } catch (error) {
+                        console.error("Error updating name:", error);
+                        showMessageBox('Failed to update name: ' + error.message, true);
+                    }
+                } else if (!newName) {
+                       showMessageBox('Name cannot be empty.', true);
+                }
+                displayName.style.display = 'block';
+                editNameInput.style.display = 'none';
+                btnEditName.textContent = 'Edit';
+            }
+        });
+
+        // --- Edit/Save Email Logic ---
+       // --- Redirect to EditEmail.html on Edit Email click ---
+btnEditEmail.addEventListener('click', () => {
+  window.location.href = 'EditEmail.html';
+});
+
+
+      // --- Update Password Logic (Send Reset Email) ---
+btnUpdatePassword.addEventListener('click', async () => {
+    if (!auth.currentUser || !auth.currentUser.email) {
+        showMessageBox('You must be signed in with an email to update your password.', true);
+        return;
+    }
+    try {
+        btnUpdatePassword.disabled = true;
+        await sendPasswordResetEmail(auth, auth.currentUser.email);
+        showMessageBox('We’ve emailed you a password reset link. Please check your inbox.', false);
+    } catch (error) {
+        console.error("Error sending password reset email:", error);
+
+        if (error.code === 'auth/too-many-requests') {
+            showMessageBox('Too many requests. Please wait a few minutes and try again.', true);
+        } else {
+            showMessageBox('Could not send reset link: ' + error.message, true);
+        }
+    } finally {
+        btnUpdatePassword.disabled = false;
+    }
+});
+
+
+
+        // --- View Recipes Logic ---
+btnViewRecipes.addEventListener('click', () => {
+    window.location.href = 'Chef.html';
+});
+
+
+        // --- Logout Link (assuming it's part of a header not shown in the screenshot) ---
+        if (logoutLink) {
+            logoutLink.addEventListener('click', async (event) => {
+                event.preventDefault();
+
+                if (auth.currentUser) {
+                    try {
+                        await signOut(auth);
+                        console.log("User signed out successfully.");
+                        window.location.href = 'signup.html';
+                    } catch (error) {
+                        console.error("Error signing out:", error);
+                        showMessageBox("Error signing out. Please try again.", true);
+                    }
+                } else {
+                    window.location.href = 'signup.html';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
